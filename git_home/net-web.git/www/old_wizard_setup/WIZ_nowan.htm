@@ -1,0 +1,20 @@
+<% http_header("style/form.css", "/funcs.js") %>
+<% func_header("", "WIZ_detwan.htm", "wizard_detwan") %>
+<div class="page_title">$wizard_setup_nowan</div>
+<div id="main" class="main">
+<% table_header() %>
+<TR><TD>$wizard_setup_nowan_check</TD></TR>	
+$bluebar
+<TR>
+	<TD nowrap align=center> 
+	<!--input type='submit' value='$retry_mark'>
+	<input type='button' value='$quit_mark' onClick='top.close();'-->
+	<div id="line2_1" class="common_button_short" name="Cancel" onClick=''><b>$retry_mark</b></div>
+    <div id="line2_2" class="common_button_short" name="Apply" onclick='close_top_window();'><b>$quit_mark</b></div>
+	</TD>
+</TR>
+</TABLE>
+</div>
+</FORM>
+</BODY>
+</HTML>

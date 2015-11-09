@@ -1,0 +1,66 @@
+<% http_header("style/form.css", "/funcs.js", "/bas_bpa.js") %>
+<% body_header("_Wizard_cfm", "BAS_update.htm", "wizard_bpa") %>
+ <div class="page_title">Telstra BigPond</div>
+<div class="fix_button">
+    <div id="line3_1" class="common_button_short" name="Test" onClick='return check_wizard_bpa(1,"wiz");'><b>$test_mark</b></div>
+    <div id="line3_2" class="cancel_button" name="Cancel" onClick='location.href="WLG_wireless.htm";'><b>$cancel_mark</b></div>
+    <div id="line3_3" class="apply_button" name="Apply" onclick='return check_wlan("g");check_wlan("a");'><b>$apply_mark</b></div>
+</div>
+<div id="main" class="main_top_button"> 
+<% table_header( ) %>
+
+<script>
+var run_test="<% cfg_get("run_test") %>";
+<% cfg_set("run_test", "no") %>
+<% commit() %>
+var ts='<% cfg_get("wizard_bpa") %>';
+function loadvalue()
+{
+	var cf=document.forms[0];
+	cf.bpa_username.value='<% cfg_get("wan_bpa_username") %>';
+	cf.bpa_passwd.value='<% cfg_get("wan_bpa_password") %>';
+	cf.bpa_server.value='<% cfg_get("wan_bpa_servicename") %>';
+	goTestApply();
+
+}
+</script>
+<input type="hidden" name="run_test" value="">
+<input type="hidden" name="WIZ_type" value="bpa">
+
+<TR>
+	<TD nowrap><B>$basic_pppoe_login</B></TD>
+	<TD nowrap>
+	<input type="text" name="bpa_username" maxLength="60" size="16" onKeyPress="return getkey('ssid', event)" value="">
+	</TD>
+</TR>
+<TR>
+	<TD nowrap><B>$basic_pppoe_passwd</B></TD>
+	<TD nowrap>
+	<input type="password" name="bpa_passwd" size="16" maxlength="50" onFocus="this.select();" onKeyPress="return getkey('ssid', event)" value="">
+	</TD>
+</TR>
+<TR>
+	<TD nowrap>$basic_pppoe_idle</TD>
+	<TD nowrap>
+	<input type="text" name="bpa_idletime" maxLength="5" size="16" value="<% idle_time("wan_bpa_idle_time") %>" onKeyPress="return getkey('num', event)">
+	</TD>
+</TR>
+<TR>
+	<TD nowrap><B>$basic_bpa_auth_serv</B></TD>
+	<TD nowrap>
+	<input type="text" name="bpa_server" maxLength="128" size="16" value="" onKeyPress="return getkey('ssid', event)">
+	</TD>
+</TR>
+$bluebar
+<!--TR>
+	<TD nowrap colspan=2 align=center>
+	<input type='submit' name='Apply' value='$apply_mark' onClick='return check_wizard_bpa(0,"wiz");'>
+	<input type='button' name='Cancel' value='$cancel_mark' onClick='location.href="BAS_basic.htm";'>
+	<input type='submit' name='Test' value='$test_mark' onClick='return check_wizard_bpa(1,"wiz");'>
+	</TD>
+</TR-->
+</TABLE>
+</div>
+</FORM>
+</BODY>
+</HTML>

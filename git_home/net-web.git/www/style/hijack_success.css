@@ -1,0 +1,18 @@
+#info_div { height:135px; width:700px; }
+#info_div_24 { height:90px; width:700px; }
+
+#allBtns_div { height:40px; width:550px;  margin:10px auto;}
+
+#allBtns_div .success_buttons_split { height:30px; width:5%; margin:0px 0px; float:left; }
+
+#btnsContainer_div1 { width:28%; float:left; }
+
+#btnsContainer_div2 { width:28%; float:left; }
+
+#btnsContainer_div3 { width:34%; float:right; }
+
+#words_div_success{  margin:30px 10% 0px 10%;}
+
+.tooltip { cursor: pointer }
+
+#a { color: blue; text-decoration: underline; cursor: pointer; }

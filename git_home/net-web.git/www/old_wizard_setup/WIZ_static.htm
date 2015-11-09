@@ -1,0 +1,149 @@
+<% http_header("style/form.css", "/funcs.js", "/bas_ether.js") %>
+<% body_header("_Wizard_cfm", "BAS_update.htm", "wizard_static") %>
+ <div class="page_title">$wiz_static_ip</div>
+<div class="fix_button">
+    <div id="line3_1" class="common_button_short" name="Test" onClick='return check_wizard_static(1,"wiz");'><b>$test_mark</b></div>
+    <div id="line3_2" class="cancel_button" name="Cancel" onClick='location.href="BAS_basic.htm";'><b>$cancel_mark</b></div>
+    <div id="line3_3" class="apply_button" name="Apply" onclick='return check_wizard_static(0,"wiz");'><b>$apply_mark</b></div>
+</div>
+<div id="main" class="main_top_button"> 
+<script>
+var lan_ip="<% cfg_get("lan_ipaddr") %>";
+var lan_subnet="<% cfg_get("lan_netmask") %>";
+var old_wan_ip="<% bas_ether_ip() %>";
+var dns_third_flag=0;
+
+var run_test="<% cfg_get("run_test") %>";
+var ts="<% cfg_get("wizard_static") %>";
+<% cfg_set("run_test", "no") %>
+<% commit() %>
+function loadvalue()
+{
+	var form=document.forms[0];
+
+        var ether_get_ip=old_wan_ip;
+        if (ether_get_ip!="")
+        {
+                var ip_array=ether_get_ip.split('.');
+                form.WPethr1.value=ip_array[0];
+                form.WPethr2.value=ip_array[1];
+                form.WPethr3.value=ip_array[2];
+                form.WPethr4.value=ip_array[3];
+        }
+        var ether_get_subnet="<% bas_ether_netmask() %>";
+        if (ether_get_subnet!="")
+        {
+                var mask_array=ether_get_subnet.split('.');
+                form.WMask1.value=mask_array[0];
+                form.WMask2.value=mask_array[1];
+                form.WMask3.value=mask_array[2];
+                form.WMask4.value=mask_array[3];
+        }
+        var ether_get_gateway="<% bas_ether_gateway() %>";
+        if (ether_get_gateway!="")
+        {
+                var gtw_array=ether_get_gateway.split('.');
+                form.WGateway1.value=gtw_array[0];
+                form.WGateway2.value=gtw_array[1];
+                form.WGateway3.value=gtw_array[2];
+                form.WGateway4.value=gtw_array[3];
+        }
+        var ether_get_dns1="<% bas_ether_dns() %>";
+        if (ether_get_dns1!="" && ether_get_dns1.indexOf(":")==-1)
+        {
+                var dns1_array=ether_get_dns1.split('.');
+                form.DAddr1.value=dns1_array[0];
+                form.DAddr2.value=dns1_array[1];
+                form.DAddr3.value=dns1_array[2];
+                form.DAddr4.value=dns1_array[3];
+        }
+        var ether_get_dns2="<% bas_ether_dns("1") %>";
+        if (ether_get_dns2!="" && ether_get_dns2.indexOf(":")==-1)
+        {
+                var dns2_array=ether_get_dns2.split('.');
+                form.PDAddr1.value=dns2_array[0];
+                form.PDAddr2.value=dns2_array[1];
+                form.PDAddr3.value=dns2_array[2];
+                form.PDAddr4.value=dns2_array[3];
+        }
+
+	
+	goTestApply();
+
+}
+</script>
+<input type="hidden" name="run_test" value="">
+<input type="hidden" name="ether_ipaddr">
+<input type="hidden" name="ether_subnet">
+<input type="hidden" name="ether_gateway">
+<input type="hidden" name="ether_dnsaddr1">
+<input type="hidden" name="ether_dnsaddr2">
+<input type="hidden" name="WIZ_type" value="static">
+<TABLE cellspacing=5 cellPadding=0 width=100% border=0>
+<!--TR><TD nowrap colspan=2><H1>$wiz_static_ip</H1></TD></TR-->
+<!--TR>
+	<TD colspan=2>$provide_static_ip
+	<P>$enter_currect_ipaddr
+	</TD>
+</TR-->
+$bluebar
+<TR><TD nowrap colspan=2><B>$basic_int_intip</B></TD></TR>
+<TR>
+	<TD nowrap><img src=/spacer.gif width=20 height=12 border=0>$lan_mark_ip</TD>
+	<TD nowrap align=right>
+	<input type="text" name="WPethr1"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);" >.
+	<input type="text" name="WPethr2"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="WPethr3"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="WPethr4"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">
+	</TD>
+</TR>
+<TR>
+	<TD nowrap><img src=/spacer.gif width=20 height=12 border=0>$sta_routes_ipsubnet</TD>
+	<TD nowrap align=right>
+	<input type="text" name="WMask1"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);" >.
+	<input type="text" name="WMask2"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="WMask3"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="WMask4"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">
+	</TD>
+</TR>
+<TR>
+	<TD nowrap><img src=/spacer.gif width=20 height=12 border=0>$basic_int_gateway</TD>
+	<TD nowrap align=right>
+	<input type="text" name="WGateway1"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);" >.
+	<input type="text" name="WGateway2"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="WGateway3"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="WGateway4"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">
+	</TD>
+</TR>
+<TR><TD nowrap colspan=2><B>$basic_int_dns</B></TD></TR>
+<TR>
+	<TD nowrap><img src=/spacer.gif width=20 height=12 border=0>$basic_int_primary_dns</TD>
+	<TD nowrap align=right>
+	<input type="text" name="DAddr1"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);" >.
+	<input type="text" name="DAddr2"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="DAddr3"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="DAddr4"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">
+	</TD>
+</TR>
+<TR>
+	<TD nowrap><img src=/spacer.gif width=20 height=12 border=0>$basic_int_second_dns</TD>
+	<TD nowrap align=right>
+	<input type="text" name="PDAddr1"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);" >.
+	<input type="text" name="PDAddr2"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="PDAddr3"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="PDAddr4"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">	
+	</TD>
+</TR>
+$bluebar
+<!--TR>
+	<TD nowrap colspan=2 align=center>
+	<input type='submit' name='Apply' value='$apply_mark' onClick='return check_wizard_static(0,"wiz");'>
+	<input type='reset' name='Cancel' value='$cancel_mark' onClick='location.href="BAS_basic.htm"'>
+	<input type="submit" name="Test" value="$test_mark" onClick="return check_wizard_static(1,'wiz');">
+	</TD>
+</TR-->
+</TABLE>
+</div>
+</FORM>
+</BODY>
+</HTML>

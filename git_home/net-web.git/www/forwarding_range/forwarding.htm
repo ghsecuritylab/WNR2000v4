@@ -1,0 +1,165 @@
+<% cfg_set("port_forward_trigger", "0") %>
+<% echo_set("forwarding.htm", "/tmp/p_ft") %>
+
+<% forward_http_header() %>
+<% noload_header("_FW_forward", "forwarding.htm", "forwarding") %>
+<div class="page_title">$port_forward_trigger_head</div>
+<div id="main" class="main"> 
+<% table_header() %>
+$bluebar
+
+<% refresh_timestamp("forwarding_add", "forwarding_edit","forwarding_add_range", "forwarding_edit_range") %>
+
+<script>
+<% forward_items_xss() %>
+<% trigger_items_xss() %>
+<% upnp_items() %>
+<% save_timestamp("forwarding","forwarding_editnum","forwarding_del","forwarding_hidden_add","forwarding_editnum_range","forwarding_del_range") %>
+
+<% check_ftp() %>
+var show_enableHTTP="<% cfg_get("usb_enableHTTP") %>";
+var show_enableHvia="<% cfg_get("usb_enableHvia") %>";
+var show_HTTP_via_port="<% cfg_get("usb_HTTP_via_port") %>";
+var show_enableFTP="<% cfg_get("usb_enableFTP") %>";
+var show_enableFvia="<% cfg_get("usb_enableFvia") %>";
+var show_FTP_via_port="<% cfg_get("usb_FTP_via_port") %>";
+var usb_router_flag=parent.usb_router_flag;
+
+var lan_ip="<% cfg_get("lan_ipaddr") %>";
+var lan_subnet="<% cfg_get("lan_netmask") %>";
+var remote_port="<% cfg_get("remote_port") %>";
+var ts='<% cfg_get("forwarding") %>';
+
+var have_fw_range=(top.forward_range_flag == 1 &&(top.is_ru_version==1 || top.is_pr_version==1)) ? 1 : 0;
+
+function isIE()
+{
+	var browser = new Object();
+	browser.version = parseInt(navigator.appVersion);
+	browser.isNs = false;
+	browser.isIe = false;
+	if(navigator.appName.indexOf("Netscape") != -1)
+		browser.isNs = true;
+	else if(navigator.appName.indexOf("Microsoft") != -1)
+		browser.isIe = true;
+
+	if(browser.isNs)
+		return false;
+	else if (browser.isIe)
+		return true;
+	else
+		return false;
+}
+function setButtonClass(str,id)
+{
+  var words_len = document.getElementById(id);
+  
+  if(id == "edit" || id == "delete")
+  {
+	if( str.length >=15 )
+	{
+		words_len.className = words_len.className +"_little";
+	}
+  }
+  else
+  {
+      if( str.length >=20 )
+	{
+		words_len.className = words_len.className +"_little";
+	}
+  }
+}
+</script>
+
+<input type="hidden" name="select_edit">
+<input type="hidden" name="select_del">
+<input type="hidden" name="hidden_service_name">
+<input type="hidden" name="hidden_protocol">
+<input type="hidden" name="hidden_external_portstart"><!-- fix bug 21344 change forwarding page -->
+<input type="hidden" name="hidden_external_portend">
+<input type="hidden" name="hidden_internal_portstart">
+<input type="hidden" name="hidden_internal_portend">
+<input type="hidden" name="service_ip">
+<input type="hidden" name="serflag">
+<input type="hidden" name="real_select">
+<input type="hidden" name="hidden_same_range" value="1"><!-- to fix bug 25114 -->
+
+<% hidden_forward_range() %>
+<TR>
+	<TD nowrap colspan=2>
+	<A tabindex=-1 href="javascript:loadhelp('_FW_forward','select')"><B>$select_service_type</B></A>
+	</TD>
+</TR>
+<TR>
+	<TD nowrap colspan=2>
+	<input type="radio" name="serv_type" checked value="pf">$port_forward
+	</TD>
+</TR>
+<TR>
+	<TD nowrap colspan=2>
+	<input type="radio" name="serv_type" value="pt" onclick="doPortChange(1)">$port_trigger
+	</TD>
+</TR>
+$bluebar
+<TR>
+	<TD nowrap>
+	<A tabindex=-1 href="javascript:loadhelp('_FW_forward','setup')"><B>$forward_service_name</B></A>
+	</TD>
+	<TD nowrap>
+	<A tabindex=-1 href="javascript:loadhelp('_FW_forward','setup')"><B>$forward_server_ip</B></A>
+	</TD>	
+</TR>
+<TR>
+	<TD nowrap>
+	<select name="svs_gm" size="1">
+		<option value="FTP">$block_ser_setup_ftp</option>
+		<option value="HTTP">$block_ser_setup_http</option>
+		<option value="ICUII">$block_ser_setup_icu</option>
+		<option value="IP_Phone">$block_ser_setup_ipphone</option>
+		<option value="NetMeeting">$block_ser_setup_netmeet</option>
+		<option value="News">$block_ser_setup_news</option>
+		<option value="PPTP">$block_ser_setup_pptp</option>
+		<option value="QuakeII/III">$block_ser_setup_quake</option>
+		<option value="Real-Audio">$block_ser_setup_real</option>
+		<option value="Telnet">$block_ser_setup_telnet</option>
+	</select>
+	</TD>
+	<TD nowrap>
+	<input type="text" name="SV_IP1" size="3" autocomplete="off" maxlength="3" readonly onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="SV_IP2" size="3" autocomplete="off" maxlength="3" readonly onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="SV_IP3" size="3" autocomplete="off" maxlength="3" readonly onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="SV_IP4" size="3" autocomplete="off" maxlength="3"  onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">
+	<input class="add_bt"  type="submit" name="svAdd" value="$add_mark" onClick="return Check_add(document.forms[0]);">
+	</TD>
+</TR>
+$bluebar
+<% show_forward_table() %>
+$bluebar
+<TR>
+	<TD nowrap colspan=2 align=center>
+	<input class="edit_bt" id=edit type="submit" name="Edit Service" value="$forward_edit_service" onClick="return check_forwarding_edit(document.forms[0]);">
+	<input class="delete_bt" id=delete type="submit" name="Delete Service" value="$forward_del_service" onClick="return check_forwarding_del(document.forms[0]);">
+	<script>
+	if(have_fw_range==0)
+	{
+		document.write('<BR><BR>');
+		document.write('<input class="long_add_bt" id=add_long  type="submit" name="Add Custom Service" value="$forward_add_service" onClick="check_maxNumAdd(document.forms[0],forward_num,20,\'$forward_length_20\',\'forwarding_add_wait.htm\');return false;">');
+	}
+	else
+	{
+		document.write('<input class="long_add_bt" id=add_long  type="submit" name="Add Custom Service" value="$forward_add_service" onClick="check_maxNumAdd(document.forms[0],count+1,20,\'$forward_length_20\',\'forwarding_add_wait.htm\');return false;">');
+		document.write('<input class="long_common_bt" id=refresh type="button" name="Arrange by Internal IP" value="$ports_arrange_button" onClick="arrange_by_ip(1)">');
+	}
+	setButtonClass("$forward_edit_service","edit")
+	setButtonClass("$forward_del_service","delete")
+	setButtonClass("$forward_add_service","add_long")
+	</script>
+	</TD>
+</TR>  
+</TABLE>
+</div>
+<% help_box("1","_FW_forward") %>
+</FORM>
+<script>show_servip();</script>
+</BODY>
+</HTML>

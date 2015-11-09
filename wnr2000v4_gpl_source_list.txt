@@ -1,0 +1,132 @@
+1) List the model number. If the open source code archive applies to multiple models, list each model individually.
+
+WNR2000v4
+
+2) List the version number of the firmware/software that correlates with the open source code archive.
+
+wnr2000v4-V1.0.0.34PR
+
+7) List the main HW platform utilized such as CPU, main chipset, RF chipset, DSP, Switch IC¡­etc.
+
+Atheros AR9341+ AR9341(2.4GHz)
+
+8) List the name, version, license, and modification status of the OS for the product
+
+Linux kernel 2.6.31, GPL, Yes 
+
+9) List the name, version, license, and modification status of the boot loader for the product
+
+u-boot, 1.1.4, GPL, Yes
+
+10) List the name, version, license, and modification status of the toolchain for the product
+
+gcc, 4.3.3, GPL, No
+
+11) List the name, version, license, and modification status of the tools for the product
+
+genext2fs, 1.4rc1, GPL, No
+
+ipkg-utils, 1.7, GPL, No
+
+lzma, 432, GPL, No
+
+mtd, 20090505, GPL, No
+
+sed, 4.1.2, GPL, No
+
+squashfs, 3.0, GPL, No
+
+12) List the name, version, license, and modification status of the application modules for the product
+
+acl, 1,  DNI, Yes
+
+ap-mode, 1, DNI, Yes
+
+artmtd, 1, DNI, Yes
+
+ather-aquila-madwifi-11n-script, 7.1.3.29, Atheros, Yes
+
+atheros-aquila-wpa2, v0.5.9, BSD/GPL, Yes
+
+bridge-utils, 1.0.6, GPL, No
+
+datalib, 1.0, DNI, Yes
+
+detcable, 1, DNI, Yes
+
+detwan, 1.0, GPL, Yes
+
+dnibusybox, 1.4.2, GPL, Yes
+
+dnidnsmasq, 2.39, GPL, Yes
+
+dni-mtd, 5, GPL, No
+
+dni-ntpclient, 2003_194, GPL, Yes
+
+dnippp, 2.4.3, GPL, Yes
+
+dni-ripd, dni23, DNI, Yes
+
+ebtables, 2.0.9, GPL, No
+
+ez-ipupdate, 3.0.10, GPL, Yes
+
+fetchpin, 1, DNI, Yes
+
+hotplug2, 199, GPL, No
+
+igmpproxy, 1, GPL, Yes
+
+led-control, 1, DNI, Yes
+
+lltd, 01, MICROSOFT WINDOWS RALLY PROGRAM LICENSE, Yes
+
+lua, 5.1.4, GPL, No
+
+miniupnp, 20070127, BSD, Yes
+
+net6conf, 0.2, GPL, Yes
+
+net-web, 1, BSD, Yes
+
+net-dump, 1, GPL, Yes
+
+net-scan, 1.0, GPL, Yes
+
+net-util, dni13, DNI, Yes
+
+net-wall, 2.0, DNI, Yes
+
+phddns, 1, GPL, Yes
+
+pot, 1.0.4, GPL, Yes
+
+radvd, 1.5, GPL, Yes
+
+smtpclient, 2.64, GPL, Yes
+
+telnetenable, dni2,GPL, Yes
+
+trafficmeter, 2.0, DNI, Yes
+
+uci, 0.7, GPL, No
+
+udev, 106, GPL, Yes
+
+udhcp, 0.9.8, GPL, Yes
+
+utelnetd, 0.1.9, GPL, Yes
+
+wide-dhcpv6, 20080615r, GPL, Yes
+
+wireless-tools, 29, GPL, Yes
+
+wlan-common, 2.5, GPL, Yes
+
+zebra, 0.95a, GPL, No
+
+13) List the name, version, license, and modification status of the library modules for the product
+
+libpcap, 1.0.0, GPL, No
+

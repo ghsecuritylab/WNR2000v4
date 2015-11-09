@@ -1,0 +1,23 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006 OpenWrt.org
+
+#bug22205 change the index from 60 to 23
+START=23
+
+start() {
+	# change package/net-web/Makefile, put pages in /usr/www
+	# copy /usr/www/* /tmp/www in this file
+	# change package/base-files/Makefile, ln -s /tmp/www $(1)/www
+	mkdir /tmp/www
+	cp -rf /usr/www/* /tmp/www
+
+	/www/cgi-bin/uhttpd.sh start
+	inetd
+	detplc
+}
+
+stop() {
+	killall inetd
+	/www/cgi-bin/uhttpd.sh stop
+}
+

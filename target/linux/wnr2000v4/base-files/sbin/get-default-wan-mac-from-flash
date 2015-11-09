@@ -1,0 +1,8 @@
+#!/bin/sh
+CALMTD=mtd
+CALMTDMAJOR=90
+CALMTDMINOR=14
+
+/bin/mknod -m 644 /dev/$CALMTD.$$ c $CALMTDMAJOR $CALMTDMINOR
+/usr/bin/head -c 12 /dev/$CALMTD.$$ |/usr/bin/hexdump -v -C |/usr/bin/awk '/^00000000/{OFS=":";print $2,$3,$4,$5,$6,$7}'
+rm -rf /dev/$CALMTD.$$

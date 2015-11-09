@@ -1,0 +1,75 @@
+<% http_header("style/form.css", "/funcs.js") %>
+
+<BODY target=formframe onLoad="updateProgress();" bgcolor=#ffffff>
+<FORM>
+<div class="page_title">$wizard_head</div>
+<% refresh_timestamp("wizard_detwan") %>
+<script >
+var pchar = "||"; // progress char
+var maxchars = 33; 
+var delay_time = 310; // msecs
+var charcount = 0; 
+
+function makeStr(strSize, fillChar)
+{
+	var temp = "";
+	for (i = 0; i < strSize ; i++)
+		temp = temp + fillChar;
+	return temp;
+}
+
+function updateProgress()
+{
+	var cf = document.forms[0];
+
+	if (charcount < maxchars)
+	{
+		if (cf.progress != null)
+		{
+			charcount++;
+			cf.progress.value = makeStr(charcount,pchar);
+			setTimeout("updateProgress()", delay_time);
+		}
+		else
+			alert("cf.progress == NULL");
+	}
+	else
+		location.href="WIZ_detwan.htm";
+}
+
+var status="<% detwan_status() %>";
+var percComplete = 0;
+status = parseInt(status);
+if (status >= 10000) 
+{
+ 	if (status == 10001)
+		location.href="WIZ_type_dhcp.htm";
+	else if (status == 10002)
+		location.href="WIZ_type_pppoe.htm";
+	else if (status == 10003)
+		location.href="WIZ_type_static.htm";
+	else if (status == 10004)
+		location.href="WIZ_type_static.htm";
+	else if (status == 10005)
+		location.href="WIZ_type_already.htm";
+	else if (status == 10006)
+		location.href="WIZ_type_bpa.htm";	
+	else if(status == 10007)
+		location.href="WIZ_type_pptp.htm";
+	else
+		location.href="WIZ_nowan.htm";
+}
+</script>
+<TABLE cellspacing=5 cellPadding=0 width=100% border=0>
+<TR>
+	<!--TD nowrap><H1>$wizard_head</H1></TD-->
+	<!--TD></TD-->
+	<TD nowrap align=center><input type="text" name="progress" value="" style="color: #0000ff" ></TD>
+</TR>
+<TR><P><TD colspan=3 align=center ><BR><B>$detect_port</B></TD></P></TR>
+<TR><TD colspan="3" height="12"><HR color="#0099CC"></TD></TR>
+<TR><TD colspan=3 align=center>$wizard_pls_wait</TD></TR>
+</TABLE>
+</FORM>
+</body>
+</HTML>

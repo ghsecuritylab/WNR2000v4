@@ -1,0 +1,24 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006 OpenWrt.org
+
+START=95
+boot() {
+	#IPTV port enable
+	#iptv_port_enable="$(/bin/config get wan_iptv_port_enable)"
+	#if [ "x$iptv_port_enable" = "x1" ]; then
+	#	echo 1 > /proc/br_iptv_enable
+	#fi
+
+	[ -d /tmp/root ] && {
+		lock /tmp/.switch2jffs
+		firstboot switch2jffs
+		lock -u /tmp/.switch2jffs
+	}
+
+	# set leds to normal state
+	. /etc/diag.sh
+	set_state done
+
+	# Start ipmac binding
+	/sbin/ip_mac start
+}

@@ -1,0 +1,10 @@
+<% help_head() %>
+</HEAD>
+<script>
+var have_fw_range=(top.forward_range_flag == 1 &&(top.is_ru_version==1 || top.is_pr_version==1)) ? 1 : 0;
+if(have_fw_range ==1)
+	document.write("$h_ports_custom_service");
+else
+	document.write("$h_FW_forward");
+</script>
+</HTML>

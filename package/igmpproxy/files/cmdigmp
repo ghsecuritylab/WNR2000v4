@@ -1,0 +1,103 @@
+#!/bin/sh
+
+#[ -f /usr/local/sbin/igmpproxy ] || exit 0
+
+RETVAL=0
+prog="igmpproxy"
+PID_FILE="/var/run/igmpproxy.pid" #if the path/file changes, remember to modify snmp checking function
+CONFIG_FILE="/var/igmpproxy.conf"
+lan_ifname=`config get lan_ifname`
+wan_ifname=`config get wan_ifname`
+wan_hwifname=br1
+wan_proto=`config get wan_proto`
+current_language=`config get GUI_Region`
+
+start() {
+	# Start daemons.
+	local igmp_enable=`config get wan_endis_igmp`
+	killall igmpproxy
+
+	echo $"Starting $prog: "
+	echo "quickleave" > $CONFIG_FILE
+	if [ "$igmp_enable" = "1" ]; then
+		echo "mode 3" >> $CONFIG_FILE          # set the mode as proxy&&snooping 
+	else
+		echo "mode 1" >> $CONFIG_FILE          # set the mode as only snooping
+	fi
+	echo "" >> $CONFIG_FILE
+
+        case "$wan_proto" in
+                static|dhcp)
+                        wan_ifname_upstream=$wan_ifname
+                        ;;
+                pppoe|pptp|l2tp)
+			if [ $current_language = "Russian" ]; then
+                        	wan_ifname_upstream=$wan_hwifname
+			else
+				wan_ifname_upstream=ppp0
+			fi
+                        ;;
+                *)
+                        wan_ifname_upstream=$wan_ifname
+        esac
+	
+	echo "phyint $wan_ifname_upstream upstream  ratelimit 0  threshold 1" >> $CONFIG_FILE
+	echo "" >> $CONFIG_FILE
+
+	echo "phyint $lan_ifname downstream  ratelimit 0  threshold 1" >> $CONFIG_FILE
+	echo "" >> $CONFIG_FILE
+
+	if [ "$wan_ifname_upstream" = "$wan_hwifname" ]; then
+		echo "phyint ppp0 disabled" >> $CONFIG_FILE
+	echo "" >> $CONFIG_FILE
+	fi
+
+	touch $PID_FILE
+
+	ebtables -A OUTPUT -o eth1 -p ipv4 --ip-dst 239.255.255.250 -j ACCEPT
+	ebtables -A OUTPUT -o eth1 -p ipv4 --ip-dstrange 224.0.1.0-239.255.255.255 -j DROP
+
+	if [ "$igmp_enable" = "1" ]; then
+		echo 1 > /proc/igmpsnoop
+	else
+		echo 0 > /proc/igmpsnoop
+	fi
+
+	${prog} -c $CONFIG_FILE &
+	RETVAL=$?
+	echo
+	return $RETVAL
+}
+
+stop() {
+	# Stop daemons.
+	echo $"Shutting down $prog: "
+	killall igmpproxy
+	rm -f ${PID_FILE}
+	ebtables -D OUTPUT -o eth1 -p ipv4 --ip-dst 239.255.255.250 -j ACCEPT
+        ebtables -D OUTPUT -o eth1 -p ipv4 --ip-dstrange 224.0.1.0-239.255.255.255 -j DROP
+	RETVAL=$?
+	echo
+	return $RETVAL
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|reload)
+	stop
+	start
+	RETVAL=$?
+	;;
+  *)
+	echo $"Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $RETVAL
+

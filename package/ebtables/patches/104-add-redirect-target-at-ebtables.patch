@@ -1,0 +1,11 @@
+--- ./extensions/Makefile.bak	2012-06-28 09:20:14.397198524 +0800
++++ ./extensions/Makefile	2012-06-28 08:56:35.166572400 +0800
+@@ -3,7 +3,7 @@
+ #EXT_FUNC+=802_3 nat arp arpreply ip ip6 standard log redirect vlan mark_m mark \
+ #          pkttype stp among limit ulog nflog
+ #EXT_TABLES+=filter nat broute
+-EXT_FUNC+=802_3 nat ip standard log
++EXT_FUNC+=802_3 nat ip standard log redirect
+ EXT_TABLES+=filter broute
+ EXT_OBJS+=$(foreach T,$(EXT_FUNC), extensions/ebt_$(T).o)
+ EXT_OBJS+=$(foreach T,$(EXT_TABLES), extensions/ebtable_$(T).o)

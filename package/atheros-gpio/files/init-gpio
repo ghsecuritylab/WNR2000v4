@@ -1,0 +1,9 @@
+#!/bin/sh /etc/rc.common
+START=20
+
+start() {
+	load_modules /etc/modules.d/40-atheros-gpio
+
+	mknod /dev/atherosgpio c 240 0
+	#mknod /dev/atherosgpiointr c 250 0
+}

@@ -1,0 +1,46 @@
+This file contains any messages produced by compilers while
+running configure, to aid debugging if configure makes a mistake.
+
+configure:551: checking for gcc
+configure:628: checking whether the C compiler (mips-openwrt-linux-uclibc-gcc -Os -pipe -mips32 -mtune=mips32 -funit-at-a-time -fhonour-copts -msoft-float  -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/target-mips_uClibc-0.9.30.1/usr/lib -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/target-mips_uClibc-0.9.30.1/lib -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/usr/lib -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/lib ) works
+configure:642: mips-openwrt-linux-uclibc-gcc -o conftest -Os -pipe -mips32 -mtune=mips32 -funit-at-a-time -fhonour-copts -msoft-float  -I/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/target-mips_uClibc-0.9.30.1/usr/include -I/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/target-mips_uClibc-0.9.30.1/include -I/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/usr/include -I/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/include  -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/target-mips_uClibc-0.9.30.1/usr/lib -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/target-mips_uClibc-0.9.30.1/lib -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/usr/lib -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/lib  conftest.c  1>&5
+configure:662: checking whether the C compiler (mips-openwrt-linux-uclibc-gcc -Os -pipe -mips32 -mtune=mips32 -funit-at-a-time -fhonour-copts -msoft-float  -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/target-mips_uClibc-0.9.30.1/usr/lib -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/target-mips_uClibc-0.9.30.1/lib -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/usr/lib -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/lib ) is a cross-compiler
+configure:667: checking whether we are using GNU C
+configure:676: mips-openwrt-linux-uclibc-gcc -E conftest.c
+configure:691: checking whether mips-openwrt-linux-uclibc-gcc accepts -g
+configure:719: checking whether make sets ${MAKE}
+configure:756: checking for a BSD compatible install
+configure:815: checking for strerror
+configure:868: checking for sys_errlist in -lc
+configure:887: mips-openwrt-linux-uclibc-gcc -o conftest -Os -pipe -mips32 -mtune=mips32 -funit-at-a-time -fhonour-copts -msoft-float  -I/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/target-mips_uClibc-0.9.30.1/usr/include -I/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/target-mips_uClibc-0.9.30.1/include -I/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/usr/include -I/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/include  -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/target-mips_uClibc-0.9.30.1/usr/lib -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/target-mips_uClibc-0.9.30.1/lib -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/usr/lib -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/lib  conftest.c -lc   1>&5
+/tmp/cc8Qzurp.o: In function `main':
+conftest.c:(.text+0x14): undefined reference to `sys_errlist'
+collect2: ld returned 1 exit status
+configure: failed program was:
+#line 876 "configure"
+#include "confdefs.h"
+/* Override any gcc2 internal prototype to avoid an error.  */
+/* We use char because int might match the return type of a gcc2
+    builtin and then its argument prototype would still apply.  */
+char sys_errlist();
+
+int main() {
+sys_errlist()
+; return 0; }
+configure:911: checking for socket in -lsocket
+configure:930: mips-openwrt-linux-uclibc-gcc -o conftest -Os -pipe -mips32 -mtune=mips32 -funit-at-a-time -fhonour-copts -msoft-float  -I/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/target-mips_uClibc-0.9.30.1/usr/include -I/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/target-mips_uClibc-0.9.30.1/include -I/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/usr/include -I/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/include  -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/target-mips_uClibc-0.9.30.1/usr/lib -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/target-mips_uClibc-0.9.30.1/lib -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/usr/lib -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/lib  conftest.c -lsocket   1>&5
+/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/usr/lib/gcc/mips-openwrt-linux-uclibc/4.3.3/../../../../mips-openwrt-linux-uclibc/bin/ld: cannot find -lsocket
+collect2: ld returned 1 exit status
+configure: failed program was:
+#line 919 "configure"
+#include "confdefs.h"
+/* Override any gcc2 internal prototype to avoid an error.  */
+/* We use char because int might match the return type of a gcc2
+    builtin and then its argument prototype would still apply.  */
+char socket();
+
+int main() {
+socket()
+; return 0; }
+configure:951: checking for gethostbyname in -lnsl
+configure:970: mips-openwrt-linux-uclibc-gcc -o conftest -Os -pipe -mips32 -mtune=mips32 -funit-at-a-time -fhonour-copts -msoft-float  -I/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/target-mips_uClibc-0.9.30.1/usr/include -I/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/target-mips_uClibc-0.9.30.1/include -I/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/usr/include -I/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/include  -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/target-mips_uClibc-0.9.30.1/usr/lib -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/target-mips_uClibc-0.9.30.1/lib -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/usr/lib -L/home/eclair.chen/new_project/release/wnr2000v4-buildroot.git/staging_dir/toolchain-mips_gcc-4.3.3_uClibc-0.9.30.1/lib  conftest.c -lnsl   1>&5

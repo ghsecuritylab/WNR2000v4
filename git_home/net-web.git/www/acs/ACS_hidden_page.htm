@@ -1,0 +1,116 @@
+<% http_header("style/form.css") %>
+<% nohelp_header("ACS_hidden_page.htm", "ACS_Setting") %>
+
+<script>
+
+var channel = <% cfg_get("wl_hidden_channel") %>;
+var mode = <% cfg_get("wl_simple_mode") %>;
+var acs_level = <% cfg_get("wlan_acs_level") %>;
+var trigger_val = '<% cat_file("/proc/sys/dcs/wifi0/trigger_val") %>';
+var enable_widi_trigger = '<% cat_file("/proc/sys/dcs/wifi0/enable_widi_trigger") %>';
+var enable_widi_busy_trigger = '<% cat_file("/proc/sys/dcs/wifi0/enable_widi_busy_trigger") %>';
+
+var rdonly = 0;
+if( trigger_val == '' ) {
+	trigger_val = 'ACS not Available';
+	rdonly = 1;
+}
+if( enable_widi_trigger == '' ) {
+	enable_widi_trigger = 'ACS not Available';
+	rdonly = 1;
+}
+if( enable_widi_busy_trigger == '' ) {
+	enable_widi_busy_trigger = 'ACS not Available';
+	rdonly = 1;
+}
+
+function loadvalue()
+{
+	var form = document.forms[0];
+	form.trigger_val.value = trigger_val;
+	form.enable_widi_trigger.value = enable_widi_trigger;
+	form.enable_widi_busy_trigger.value = enable_widi_busy_trigger;
+
+	if( (channel != 0 && channel != 1000) || rdonly ) {
+		form.trigger_val.readOnly = true;
+		form.enable_widi_trigger.readOnly = true;
+		form.enable_widi_busy_trigger.readOnly = true;
+	}
+}
+
+function acs_setting()
+{
+	var form = document.forms[0];
+	if( rdonly == 0 ) {
+		if( form.enable_widi_trigger.value != 0 )
+			form.enable_widi_trigger.value = 1;
+		if( form.enable_widi_busy_trigger.value != 0 )
+			form.enable_widi_busy_trigger.value = 1;
+	
+		if( channel == 0 || channel == 1000 )
+			form.submit();
+	}
+	return true;
+}
+
+</script>
+
+<div id=contents>
+<table>
+<TR><TD colSpan=2><H1>ACS Setting:</H1></TD></TR>
+<TR id=blue_an><TD colspan=2><img src=/liteblue.gif width=100% height=12></TD></TR>
+<TR>
+	<TD nowrap><B>2.4G Channel: </B></TD>
+	<TD nowrap> &nbsp;<% wl_channel() %> &nbsp;</TD>
+</TR>
+<TR>
+	<TD nowrap><B>2.4G Mode: </B></TD>
+	<TD nowrap> &nbsp;
+<script>
+	var smode = "";
+	if( mode == 1 )
+		smode = "$wlan_mode_54";
+	else if( mode == 2 )
+		smode = "$wlan_mode_130";
+	else if( mode == 3 || mode == 5 || mode == 6 )
+		smode = "$wlan_mode_300";
+	else
+		smode = "Unknown Mode"
+	document.write(smode);
+</script>&nbsp;</TD>
+</TR>
+<TR>
+	<TD nowrap><B>ACS Sensitivity: </B></TD>
+	<TD nowrap> &nbsp;
+<script>
+	var sens = "";
+	if( acs_level == 0 )
+		sens = "$qos_high";
+	else if( acs_level == 1 )
+		sens = "Middle";
+	else
+		sens = "$qos_low";
+	document.write(sens);
+</script>&nbsp;</TD>
+</TR>
+<TR id=blue_an><TD colspan=2><img src=/liteblue.gif width=100% height=12></TD></TR>
+<TR>
+	<TD nowrap><B>trigger value: </B></TD>
+	<TD nowrap> <input type=text name=trigger_val></TD>
+</TR>
+<TR>
+	<TD nowrap><B>enable widi trigger: </B></TD>
+	<TD nowrap> <input type=text name=enable_widi_trigger>(0 or 1)</TD>
+</TR>
+<TR>
+	<TD nowrap><B>enable widi busy trigger: </B></TD>
+	<TD nowrap> <input type=text name=enable_widi_busy_trigger>(0 or 1)</TD>
+</TR>
+<TR id=blue_an><TD colspan=2><img src=/liteblue.gif width=100% height=12></TD></TR>
+<TR><TD colspan=2><input class="apply_bt" type="button" name="Apply" value="$apply_mark" onclick="return acs_setting();"></TD></TR>
+</table>
+</div>
+</form>
+</BODY>
+</HTML>
+

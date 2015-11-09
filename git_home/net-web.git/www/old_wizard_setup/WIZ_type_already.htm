@@ -1,0 +1,43 @@
+<% http_header("style/form.css", "/funcs.js") %>
+
+<BODY bgcolor=#ffffff>
+<% table_header("$wizard_head") %>
+<TR><TD nowrap colspan=2><B>$wizard_already</H1><BR>$wizard_continue</B></TD></TR>
+<TR><TD colSpan=2></TD></TR>
+$bluebar
+<TR>
+	<TD nowrap colspan=2 align=center>
+	<input type="button" name="Yes" value="$yes_mark" onClick="click_yes()">&nbsp;&nbsp;&nbsp;
+	<input type="button" name="No" value="&nbsp;$no_mark&nbsp;" onClick="location.href='BAS_basic.htm';">
+	</TD>
+</TR>
+</TABLE>
+
+<script>
+function click_yes()
+{
+	var select_basic='<% cfg_get("internet_type") %>';
+	var select_type='<% cfg_get("internet_ppp_type") %>';
+	var wan_select ='<% cfg_get("wan_ether_wan_assign") %>';
+	
+	if ( select_basic == '1')
+	{
+		if (wan_select == '1')
+			location.href = "WIZ_static.htm";
+		else
+			location.href = "WIZ_dhcp.htm";
+	}
+	else 
+	{
+		if(select_type == '0')
+			location.href = "WIZ_pppoe.htm";
+		else if(select_type == '1')
+			location.href = "WIZ_pptp.htm";
+		else
+			location.href = "WIZ_bpa.htm";
+	}
+}
+</script>
+
+</BODY>
+</HTML>

@@ -1,0 +1,72 @@
+<html>
+<head>
+<link rel="stylesheet" href="style/form.css"/>
+<meta http-equiv="Refresh" content="5; url=DNS_oray_status.htm" />
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+</head>
+<style>
+.oray_stb{position: absolute; top: 0px; left: 0px;}
+
+</style>
+<body bgcolor="#ffffff" width=100%>
+        <table width=100% border=0 cellpadding=0 cellspacing=2 class="oray_stb">
+                <TR><TD nowrap width=75%>$router_mac_link_status</TD>
+                <TD>
+                <script>
+		<% list_domain_name() %>
+
+                        var link_status="<% cat_file("/tmp/ez-ipupd.status") %>";
+                        var enable_oray=(parent.old_endis_ddns=="1" && parent.dns_list == "www/var/www.oray.cn")? 1 :0;
+                        if (enable_oray==0 || link_status == "0")
+                                document.write("$oray_status_offline");
+                        else if(link_status=="1")
+                                document.write("$oray_status_online");
+                        else if(link_status=="2")
+                                document.write("$oray_status_connect");
+                        else if(link_status=="3")
+                                document.write("$oray_status_auth_fail");
+                        else if(link_status=="4")
+                                document.write("$oray_status_reg_fail");
+                        else
+                                document.write("$oray_status_con_fail");
+                </script>
+                </TD></TR>
+                <TR><TD nowrap>$block_ser_service_type</TD>
+                <TD>
+                <script>
+                        var ser_type="<% cat_file("/tmp/ez-ipupd.usertp") %>";
+                        if(enable_oray==1 && link_status=="1")
+                        {
+                                if(ser_type=="0")
+                                        document.write("$oray_standard");
+                                else if(ser_type=="1")
+                                        document.write("$oray_professional");
+                                else if(ser_type=="2")
+                                        document.write("$oray_enterprise");
+                        }
+                </script>
+                </TD></TR>
+                <TR><TD nowrap>$oray_domain_info</TD>
+                <script>
+                        if(enable_oray==1 && link_status=="1" && domain_name_num>0)
+                        {
+                                for(i=0;i<domain_name_num;i++)
+                                {
+                                        var str=eval ( 'domain_name' + i );
+                                        if(i==0)
+                                                document.write("<TD>"+str+"</TD>");
+                                        else
+                                                document.write("</TR><TR><TD></TD><TD>"+str+"</TD>");
+                                }
+                        }
+                </script>
+                </TR>
+                <TR><TD nowrap>$oray_link</TD>
+                <TD nowrap><a class="linktype" href="http://www.oray.cn/passport/register.php" target="_blank">$oray_link_reg</a></TD></TR>
+                <TR><TD nowrap></TD><TD nowrap><a class="linktype" href="http://www.oray.cn/peanuthull/service.php" target="_blank">$oray_link_upg</a></TD></TR>
+                <TR><TD nowrap></TD><TD nowrap><a class="linktype" href="http://www.oray.cn/ask/" target="_blank">$oray_link_help</a></TD></TR>
+        </table>
+
+</body>
+</html>
+

@@ -1,0 +1,15 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006 OpenWrt.org
+
+START=80
+
+start() {
+	/www/cgi-bin/uhttpd.sh start
+	inetd
+}
+
+stop() {
+	killall inetd
+	/www/cgi-bin/uhttpd.sh stop
+}
+

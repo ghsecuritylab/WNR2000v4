@@ -1,0 +1,155 @@
+<% http_header("style/form.css", "/funcs.js", "/bas_pppoe.js") %>
+<% body_header("_Wizard_cfm", "BAS_update.htm", "wizard_pppoe") %>
+<div class="page_title">$basic_intserv_pppoe</div>
+<div class="fix_button">
+    <div id="line3_1" class="common_button_short" name="Test" onClick='return check_wizard_pppoe_new(1);'><b>$test_mark</b></div>
+    <div id="line3_2" class="cancel_button" name="Cancel" onclick='location.href="BAS_basic.htm";'><b>$cancel_mark</b></div>
+    <div id="line3_3" class="apply_button" name="Apply" onclick='return check_wizard_pppoe_new(0);'><b>$apply_mark</b></div>
+</div>
+<div id="main" class="main_top_button"> 
+<% table_header() %>
+
+<script>
+var run_test="<% cfg_get("run_test") %>";
+var pppoe_get_ip="<% bas_pppoe_ip() %>";
+var pppoe_get_wan_assign='<% cfg_get("wan_pppoe_wan_assign") %>';
+var pppoe_get_dns_assign='<% cfg_get("wan_pppoe_dns_assign") %>';
+var russian_pppoe_flag=0;      //top.russian_pppoe_flag;
+var gui_region="<% cfg_get("GUI_Region") %>";
+var ts="<%cfg_get("wizard_pppoe") %>";
+<% cfg_set("run_test", "no") %>
+<% commit() %>
+
+function loadvalue()
+{
+	var form = document.forms[0];
+
+        if(pppoe_get_wan_assign == '0')
+                form.WANAssign[0].checked = true;
+        else
+                form.WANAssign[1].checked = true;
+	setIP(form,'wiz');
+        if(pppoe_get_ip!="")
+        {
+                var ip_array=pppoe_get_ip.split('.');
+                form.WPethr1.value=ip_array[0];
+                form.WPethr2.value=ip_array[1];
+                form.WPethr3.value=ip_array[2];
+                form.WPethr4.value=ip_array[3];
+        }
+        if(pppoe_get_dns_assign == '0')
+                form.DNSAssign[0].checked = true;
+        else
+                form.DNSAssign[1].checked = true;
+        var pppoe_get_dns1="<% bas_pppoe_dns("0") %>";
+        if(pppoe_get_dns1!="")
+        {
+                var dns1_array=pppoe_get_dns1.split('.');
+                form.DAddr1.value=dns1_array[0];
+                form.DAddr2.value=dns1_array[1];
+                form.DAddr3.value=dns1_array[2];
+                form.DAddr4.value=dns1_array[3];
+        }
+        var pppoe_get_dns2="<% bas_pppoe_dns("1") %>";
+        if(pppoe_get_dns2!="")
+        {
+                var dns2_array=pppoe_get_dns2.split('.');
+                form.PDAddr1.value=dns2_array[0];
+                form.PDAddr2.value=dns2_array[1];
+                form.PDAddr3.value=dns2_array[2];
+                form.PDAddr4.value=dns2_array[3];
+        }
+	setDNS(form);
+
+        goTestApply();	
+}
+</script>
+
+<input type="hidden" name="pppoe_ipaddr">
+<input type="hidden" name="pppoe_dnsaddr1">
+<input type="hidden" name="pppoe_dnsaddr2">
+<input type="hidden" name="run_test" value="">
+<input type="hidden" name="WIZ_type" value="pppoe">
+<TR>
+	<TD nowrap><B>$basic_pppoe_login</B></TD>
+	<TD nowrap>
+	<input type="text" name="pppoe_username" maxLength="64" size="16" onKeyPress="return getkey('ssid', event)" value="<% cfg_sed_xss("wan_pppoe_username") %>">
+	</TD>
+</TR>
+<TR>
+	<TD nowrap><B>$basic_pppoe_passwd</B></TD>
+	<TD nowrap>
+	<input type="password" name="pppoe_passwd" size="16" maxlength="64" onFocus="this.select();" onKeyPress="return getkey('ssid', event)" value="<% cfg_sed_xss("wan_pppoe_passwd") %>">
+	</TD>
+</TR>
+<TR>
+	<TD nowrap>$basic_pppoe_serv_name</TD>
+	<TD nowrap>
+	<input type="text" name="pppoe_servicename" maxLength="50" size="16" onKeyPress="return getkey('ssid', event)" value="<% cfg_sed_xss("wan_pppoe_service") %>">
+	</TD>
+</TR>
+<TR>
+	<TD nowrap>$basic_pppoe_idle</TD>
+	<TD nowrap>
+	<input type="text" name="pppoe_idletime" maxLength="5" size="16" value="<% idle_time("wan_pppoe_idletime") %>" onKeyPress="return getkey('num', event)">
+	</TD>
+</TR>
+<TR><TD nowrap colspan=2><B>$basic_int_intip</B></TD></TR>
+<TR>
+	<TD nowrap colspan=2>
+	<input type="radio" name="WANAssign" value="Dynamic" onClick="setIP_welcome_pppoe()" checked>$basic_int_autoip
+	</TD>
+</TR>
+<TR>
+	<TD nowrap><input type="radio" name="WANAssign" value="Fixed" onClick="setIP_welcome_pppoe()">$basic_int_static_ip</TD>
+	<TD nowrap>
+	<input type="text" name="WPethr1"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);" >.
+	<input type="text" name="WPethr2"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="WPethr3"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="WPethr4"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">
+	</TD>
+</TR>
+$bluebar
+<TR><TD nowrap colspan=2><B>$basic_int_dns</B></A></TD></TR>
+<TR>
+	<TD nowrap colspan=2>
+	<input type="radio" name="DNSAssign" value="0" onClick="setDNS(document.forms[0])" checked>$basic_int_autodns
+	</TD>
+</TR>
+<TR>
+	<TD nowrap colspan=2>
+	<input type="radio" name="DNSAssign" value="1" onClick="setDNS(document.forms[0])">$basic_int_these
+	</TD>
+</TR>
+<TR>
+	<TD nowrap>&nbsp;&nbsp;$basic_int_primary_dns</TD>
+	<TD nowrap>
+	<input type="text" name="DAddr1"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);" >.
+	<input type="text" name="DAddr2"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="DAddr3"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="DAddr4"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">
+	</TD>
+</TR>
+<TR>
+	<TD nowrap>&nbsp;&nbsp;$basic_int_second_dns</TD>
+	<TD nowrap>
+	<input type="text" name="PDAddr1"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);" >.
+	<input type="text" name="PDAddr2"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="PDAddr3"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="PDAddr4"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">
+	</TD>
+</TR>
+$bluebar
+<!--TR>
+	<TD nowrap colspan=2 align=center>
+	<input type='submit' name='Apply' value='$apply_mark' onClick='return check_wizard_pppoe_new(0);'>
+	<input type='reset' name='Cancel' value='$cancel_mark' onClick='location.href="BAS_basic.htm";'>
+	<input type='submit' name='Test' value='$test_mark' onClick='return check_wizard_pppoe_new(1);'>
+	</TD>
+</TR-->
+</TABLE>
+</div>
+
+</FORM>
+</BODY>
+</HTML>

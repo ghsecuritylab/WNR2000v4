@@ -1,0 +1,49 @@
+<% http_header("style/form.css", "/funcs.js", "/bas_ether.js") %>
+<% body_header("_Wizard_cfm", "BAS_update.htm", "wizard_dhcp") %>
+ <div class="page_title">$welcome_dhcp_ip</div>
+<div class="fix_button">
+    <div id="line3_1" class="common_button_short" name="Test" onClick='return check_wizard_dhcp(1,"wiz");'><b>$test_mark</b></div>
+    <div id="line3_2" class="cancel_button" name="Cancel" onClick='location.href="BAS_basic.htm";'><b>$cancel_mark</b></div>
+    <div id="line3_3" class="apply_button" name="Apply" onclick='return check_wizard_dhcp(0,"wiz");'><b>$apply_mark</b></div>
+</div>
+<div id="main" class="main_top_button"> 
+<% table_header() %>
+
+<script>
+var run_test="<% cfg_get("run_test") %>";
+<% cfg_set("run_test", "no") %>
+<% commit() %>
+var ts='<% cfg_get("wizard_dhcp") %>';
+function loadvalue()
+{
+	var cf=document.forms[0];
+	goTestApply();
+}
+</script>
+<input type="hidden" name="run_test" value="">
+<input type="hidden" name="WIZ_type" value="dhcp">
+<TR>
+	<TD nowrap>$basic_int_acname</TD>
+	<TD nowrap>
+	<input type="text" name="system_name" size="16" maxlength="60" value="<% cfg_sed_xss("wan_hostname") %>" onKeyPress="return getkey('apname',event)">
+	</TD>
+</TR>
+<TR>
+	<TD nowrap>$basic_int_doname</TD>
+	<TD nowrap>
+	<input type="text" name="domain_name" size="16" maxlength="60" value="<% cfg_sed_xss("wan_domain") %>" onKeyPress="return getkey('apname',event)">
+	</TD>
+</TR>
+$bluebar
+<!--TR>
+	<TD nowrap colspan=2 align=center>
+	<input type='submit' name='Apply' value='$apply_mark' onClick='return check_wizard_dhcp(0,"wiz");'>
+	<input type='button' name='Cancel' value='$cancel_mark' onClick='location.href="BAS_basic.htm";'>
+	<input type="submit" name="Test" value="$test_mark" onClick="return check_wizard_dhcp(1,'wiz');">
+	</TD>
+</TR-->
+</TABLE>
+</div>
+</FORM>
+</BODY>
+</HTML>

@@ -1,0 +1,137 @@
+#!/bin/sh
+
+nvram=/bin/config
+smtpc=/usr/sbin/smtpclient
+LOG_FILE=/var/log/messages
+SYSLOG_FILE=/var/log/log-message
+
+# email related configs (in nvram get command) :
+#   email_smtp        : smtp server address
+#   email_endis_auth  : smtp sever needs authentication or not ?
+#   email_username    : username for smtp server authentication
+#   email_password    : password for smtp server authentication
+#
+#   email_addr        : "To addr", the addr of the receiver.
+#   email_from_assign : assign "From addr" or not ?
+#   email_this_addr   : "From addr", the addr the email (says itself) comes from.
+#
+#   email_notify      :
+#   email_send_alert  :
+
+print_smtpc_arg()
+{
+        local subject="NETGEAR $(cat /proc/sys/kernel/hostname) Log"
+
+        local smtp_server=$($nvram get email_smtp)
+        local need_auth=$($nvram get email_endis_auth)
+        local username
+        local password
+        local to_addr=$($nvram get email_addr)
+        local from_addr_assigned=$($nvram get email_from_assign)
+        local from_addr
+
+        echo -n "-s \"$subject\" -S $smtp_server"
+
+        if [ "$need_auth" = "1" ]; then
+                username=$($nvram get email_username)
+                password=$($nvram get email_password)
+                echo -n " -U $username -P $password"
+        fi
+
+        if [ "$from_addr_assigned" -eq 1 ]; then
+                from_addr=$($nvram get email_this_addr)
+        elif echo "$username" | grep -q "@"; then
+                from_addr="$username"
+        else
+                # according to Netgear spec.
+                from_addr="$to_addr"
+		
+		# but as I know, different smtp servers have different rules about "From addr" :
+                # * dni : drops mails that "From addr" != "account email addr" silently.
+                # * pchome : rejects sending mails that "From addr" != "account email addr".
+                # * gmail : tranforms the "From addr" to "account email addr".
+                # the smtp servers that don't care about "From addr" and just send mails are
+                # getting scarce.
+                #
+                # for any special smtp server, process here.
+                case "$smtp_server" in
+                smtp.pchome.com.tw)
+                        [ -n "$username" ] && from_addr="${username}@pchome.com.tw"
+                        ;;
+                smtp.sina.com)
+                        [ -n "$username" ] && from_addr="${username}@sina.com"
+                        ;;
+                esac
+        fi
+        echo -n " -f $from_addr $to_addr"
+}
+
+print_log()
+{
+        if [ -s $LOG_FILE ]; then
+                sed -n '1! G;$p;h' $LOG_FILE | sed -n '1,256 p'
+        else
+                echo "The system doesn't have any logs yet"
+        fi
+}
+
+clear_log()
+{
+        # When add log,it actually writes to temp file /var/log/log-message,
+        # syslogd filters the log (if it's a log that netgear wants and user
+        # checks the category options from GUI) to file /var/log/messages.Clear log
+        # should both delete file /var/log/log-message and file /var/log/messages.
+        rm -f $LOG_FILE
+        rm -f $SYSLOG_FILE
+}
+
+sendlog() # $1: clearlog_if_success
+{
+        local email_file=/tmp/tmp_email_file
+        local err_file=/tmp/tmp_email_err_file
+        local addr="$($nvram get email_addr)"
+
+        print_log > $email_file
+        cmd="cat $email_file | $smtpc $(print_smtpc_arg) >/dev/null 2>$err_file"
+        if ! eval $cmd; then
+		logger -- "[email sent to: $addr]"
+                logger -- "[email failed] $(cat $err_file)"
+                rm -f $email_file $err_file
+                return 1
+        fi
+        rm -f $email_file $err_file
+
+        if [ "$1" = "clearlog_if_success" ]; then
+                clear_log
+        fi
+	logger -- "[email sent to: $addr]"
+
+        return 0
+}
+
+### start here ###
+
+prog=${0##*/}
+
+case "$prog" in
+email_log)
+        [ $($nvram get email_notify) = "0" ] && exit
+        sendlog "clearlog_if_success"
+        ;;
+email_full_log)
+        [ $($nvram get email_notify) = "0" ] && exit
+        # send log only if lines of log file > 256 * 90% = 230.4
+        [ ! -s $LOG_FILE ] && exit
+        [ "$(wc -l $LOG_FILE | sed -n 's/[^0-9]*//gp')" -le "230" ] && exit
+        sendlog "clearlog_if_success"
+        ;;
+send_email_alert)
+        [ $($nvram get email_notify) = "0" ] && exit
+        [ "$($nvram get email_send_alert)" = "0" ] && exit
+        sendlog "clearlog_if_success"
+        ;;
+send_log)
+        sendlog
+        ;;
+esac
+

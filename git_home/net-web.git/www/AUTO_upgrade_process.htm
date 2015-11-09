@@ -1,0 +1,106 @@
+<% http_header("style/form.css", "/funcs.js") %>
+
+<BODY onLoad="loadhelp('_upgrade');" bgcolor=#ffffff>
+<FORM>
+	<center>
+	<DIV id=show_upgrade></DIV>
+	</center>
+</FORM>
+</BODY>
+
+<script >
+var status = <% upgrade_status() %>;
+var pchar = "|"; // progress char
+var delay_time = 1000; // msecs
+var maxchars = 60;
+var percent = (status - 1000) *  maxchars / 100;
+var charcount = percent;
+//var upgrade_str="<P><font size=2>Note:It will take about 3 minutes for firmware upgrade.<P><font size=2>Please don't turn off the power or press reset button.<P><input align=center type=text name=progress class=prgbar width=600 height=70><P><P><img src=/upload.gif width=200 height=70 border=0><P>";
+var upgrade_str="<P><font size=2>$upgrade_str_1 3 $upgrade_str_2<P><input type=text name=progress class=prgbar width=600 height=70><P><P><img src=/upload.gif width=200 height=70 border=0><P>";
+
+function getObj(name)
+{
+	if (document.getElementById)
+	{
+		return document.getElementById(name);
+	}
+	else if (document.all)
+	{
+		return document.all[name];
+	}
+	else if (document.layers)
+	{
+		return document.layers[name];
+	}
+}	
+
+function makeStr(strSize, fillChar)
+{
+	var temp = "";
+	for (i=0; i < strSize ; i ++)
+		temp = temp + fillChar;
+	return temp;
+}
+
+function refreshnexttime()
+{
+	document.location.href="AUTO_upgrade_process.htm";
+}
+
+function updateProgress()
+{
+	var cf = document.forms[0];
+	if (charcount < maxchars && ((charcount - percent) > 3))
+	{
+		location.href="AUTO_upgrade_process.htm";
+	} 
+	else if (charcount < maxchars)
+	{
+		charcount++;
+		cf.progress.value = makeStr(charcount,pchar);
+		setTimeout("updateProgress()",delay_time);
+	}
+	else
+	{
+		document.location.href="/pls_wait.html";
+	}
+} 
+
+function menu_change() 
+{
+	top.enable_action=1;
+}
+
+function refreshError()
+{
+	top.topframe.location.href="top.html";
+	top.formframe.location.href="UPG_failure.htm";
+	menu_change();
+}
+
+if (status >= 10000)
+{
+	refreshError();
+}
+else if (status >= 1000 && status < 2000)
+{
+	getObj("show_upgrade").innerHTML = upgrade_str;
+	if (status == 1100)
+		document.location.href="/pls_wait.html";
+	else
+		updateProgress();
+}
+else if (status != "")
+{
+	//bug when upgrade from web site,the UI will show blank for a while,so add please wait message
+	document.write("<TR><TD colspan=2><BR> ");
+	document.write("<img src=liteblue.gif width=100%% height=12></TD></TR> ");
+	document.write("<TR><TD><BR><BR>$wizard_pls_wait<BR><BR></TD></TR> ");
+	document.write("<TR><TD colspan=2><img src=liteblue.gif width=100% height=12></TD></TR> ");
+
+	setTimeout("refreshnexttime()",2000);
+}
+else
+	refreshError();
+</script>
+</HTML>

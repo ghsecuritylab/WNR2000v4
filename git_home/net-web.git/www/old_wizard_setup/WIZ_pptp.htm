@@ -1,0 +1,123 @@
+<% http_header("style/form.css", "/funcs.js", "/bas_pptp.js") %>
+<% body_header("_Wizard_cfm", "BAS_update.htm", "wizard_pptp") %>
+ <div class="page_title">PPTP</div>
+<div class="fix_button">
+    <div id="line3_1" class="common_button_short" name="Test" onClick='return check_wizard_pptp(1,"wiz");'><b>$test_mark</b></div>
+    <div id="line3_2" class="cancel_button" name="Cancel" onClick='location.href="BAS_basic.htm";'><b>$cancel_mark</b></div>
+    <div id="line3_3" class="apply_button" name="Apply" onclick='return check_wizard_pptp(0,"wiz");'><b>$apply_mark</b></div>
+	<br>
+</div>
+<div id="main" class="main_top_button"> 
+<% table_header() %>
+
+<script>
+var run_test="<% cfg_get("run_test") %>";
+var russian_ppp_flag=0;        //top.russian_ppp_flag;
+var gui_region="<% cfg_get("GUI_Region") %>";
+var ts='<% cfg_get("wizard_pptp") %>';
+<% cfg_set("run_test", "no") %>
+<% commit() %>
+
+function loadvalue()
+{
+	var form=document.forms[0];
+
+	var pptp_get_myip="<% bas_pptp_ip() %>";
+        var pptp_get_wan_assign=<% cfg_get("wan_pptp_wan_assign") %>;
+        var pptp_get_gateway="<% cfg_get("pptp_gw_static_route") %>";
+        if (pptp_get_wan_assign == 0)
+        {
+                form.myip_1.value=form.myip_2.value=form.myip_3.value=form.myip_4.value="";
+                setDisabled(true, form.mygw_1, form.mygw_2, form.mygw_3, form.mygw_4);
+        }
+       	else if(pptp_get_myip!="")
+        {
+                var ip_array=pptp_get_myip.split('.');
+                form.myip_1.value=ip_array[0];
+                form.myip_2.value=ip_array[1];
+                form.myip_3.value=ip_array[2];
+                form.myip_4.value=ip_array[3];
+        }
+        if( pptp_get_gateway!="" )
+    	{
+                var gateway_array=pptp_get_gateway.split('.');
+        	form.mygw_1.value=gateway_array[0];
+        	form.mygw_2.value=gateway_array[1];
+        	form.mygw_3.value=gateway_array[2];
+        	form.mygw_4.value=gateway_array[3];
+    	}
+
+	setDisabled(true, form.mygw_1, form.mygw_2, form.mygw_3, form.mygw_4);
+	goTestApply();
+
+}
+</script>
+<input type="hidden" name="run_test" value="">
+<input type="hidden" name="pptp_myip">
+<input type="hidden" name="pptp_gateway">
+<input type="hidden" name="pptp_subnet">
+<input type="hidden" name="WANAssign" value="1">
+<input type="hidden" name="WIZ_type" value="pptp">
+
+<TR>
+	<TD nowrap><B>$basic_pppoe_login</B></TD>
+	<TD nowrap>
+	<input type="text" name="pptp_username" maxLength="60" size="16" onKeyPress="return getkey('ssid', event)" value="<% cfg_sed_xss("wan_pptp_username") %>">
+	</TD>
+</TR>
+<TR>
+	<TD nowrap><B>$basic_pppoe_passwd</B></TD>
+	<TD nowrap>
+	<input type="password" name="pptp_passwd" size="16" maxlength="50" onFocus="this.select();" onKeyPress="return getkey('ssid', event)" value="<% cfg_sed_xss("wan_pptp_password") %>">
+	</TD>
+</TR>
+<TR>
+	<TD nowrap>$basic_pppoe_idle</TD>
+	<TD nowrap>
+	<input type="text" name="pptp_idletime" maxLength="5" size="16" value="<% idle_time("wan_pptp_idle_time") %>" onKeyPress="return getkey('num', event)">
+	</TD>
+</TR>
+$bluebar
+<TR>
+	<TD nowrap><B>$basic_pptp_myip</B></TD>
+	<TD nowrap>
+	<input type="text" name="myip_1"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onChange="myip_update('wiz');" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);" >.
+	<input type="text" name="myip_2"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onChange="myip_update('wiz');" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);" >.
+	<input type="text" name="myip_3"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onChange="myip_update('wiz');" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);" >.
+	<input type="text" name="myip_4"  size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onChange="myip_update('wiz');" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);" >
+	</TD>
+</TR>
+<TR>
+	<TD nowrap><B>$basic_pptp_servip</B></TD>
+	<TD nowrap>
+	<input type="text" size="20" name="pptp_serv_ip" value="10.0.0.138" readonly onFocus="this.select();" onKeyPress="return getkey('ipaddr', event)">
+	</TD>
+</TR>
+<TR>
+	<TD nowrap><b>$basic_int_gateway</b></TD>
+	<TD nowrap>
+	<input type="text" name="mygw_1" size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="mygw_2" size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="mygw_3" size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">.
+	<input type="text" name="mygw_4" size="3" autocomplete="off" maxlength="3" onFocus="this.select();" onkeydown="keydown(event,this);" onKeyPress="return getkey('num',event);" onkeyup="keyup(event,this);">
+	</TD>
+</TR>
+<TR>
+	<TD nowrap><B>$basic_pptp_connection_id</B></TD>
+	<TD nowrap>
+	<input type="text" name="pptp_conn_id" size="16" maxlength="63" value="<%cfg_get("wan_pptp_connection_id")%>">
+	</TD>
+</TR>
+$bluebar
+<!--TR>
+	<TD nowrap colspan=2 align=center>
+	<input type='submit' name='Apply' value='$apply_mark' onClick='return check_wizard_pptp(0,"wiz");'>
+	<input type='button' name='Cancel' value='$cancel_mark' onClick='location.href="BAS_basic.htm";'>
+	<input type="submit" name="test" value="$test_mark" onClick="return check_wizard_pptp(1,'wiz');">
+	</TD>
+</TR-->
+</TABLE>
+</div>
+</FORM>
+</BODY>
+</HTML>
